@@ -18,50 +18,36 @@ use Exception;
 
 class QrBotController extends Controller
 {
-    public function qrbot(Request $request) {
+    public function webhook (Request $request)
+    {
+        $lineAccessToken = env('LINE_ACCESS_TOKEN', "");
+        $lineChannelSecret = env('LINE_CHANNEL_SECRET', "");
 
-        $channel_secret = env('LINE_CHANNEL_SECRET', "");
-        $access_token = env('LINE_ACCESS_TOKEN', "");
-        $request_body = $request->getContent();
-        $hash = hash_hmac('sha256', $request_body, $channel_secret, true);
-        $signature = base64_encode($hash);
-
-        if($signature === $request->header('X-Line-Signature')) {   // LINEからの送信を検証
-
-            $client = new CurlHTTPClient($access_token);
-            $bot = new LINEBot($client, ['channelSecret' => $channel_secret]);
-
-            try {
-
-                $events = $bophpphpt->parseEventRequest($request_body, $signature);
-
-                foreach ($events as $event) {
-
-                    if($event instanceof MessageEvent && $event instanceof TextMessage) {   // テキストメッセージの場合
-
-                        $text = $event->getText();              // LINEで送信されたテキスト
-                        $reply_token = $event->getReplyToken(); // 返信用トークン
-
-                        // QRコード作成
-                        $filename = Str::random() .'.png';
-                        $path = public_path('qr_code/'. $filename);
-                        $qrCode = new QrCode($text);
-                        $qrCode->writeFile($path);
-
-                        // 画像メッセージで返信
-                        $url = url('qr_code/'. $filename);
-                        $replying_message = new TextMessageBuilder(
-                            '$url'
-                        );
-                        $bot->replyMessage($reply_token, $replying_message);
-
-                    }
-
-                }
-
-            } catch (\Exception $e) {}
-
+        // 署名のチェック
+        $signature = $request->headers->get(HTTPHeader::LINE_SIGNATURE);
+        if (!SignatureValidator::validateSignature($request->getContent(), $lineChannelSecret, $signature)) {
+            // TODO 不正アクセス
+            return;
         }
 
+        $httpClient = new CurlHTTPClient ($lineAccessToken);
+        $lineBot = new LINEBot($httpClient, ['channelSecret' => $lineChannelSecret]);
+
+        try {
+            // イベント取得
+            $events = $lineBot->parseEventRequest($request->getContent(), $signature);
+
+            foreach ($events as $event) {
+                // ハローと応答する
+                $replyToken = $event->getReplyToken();
+                $textMessage = new TextMessageBuilder("ハロー");
+                $lineBot->replyMessage($replyToken, $textMessage);
+            }
+        } catch (Exception $e) {
+            // TODO 例外
+            return;
+        }
+
+        return;
     }
 }
