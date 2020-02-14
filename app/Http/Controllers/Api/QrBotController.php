@@ -18,7 +18,7 @@ use Exception;
 
 class QrBotController extends Controller
 {
-    public function webhook (Request $request)
+    public function qrbot (Request $request)
     {
         $lineAccessToken = env('LINE_ACCESS_TOKEN', "");
         $lineChannelSecret = env('LINE_CHANNEL_SECRET', "");
