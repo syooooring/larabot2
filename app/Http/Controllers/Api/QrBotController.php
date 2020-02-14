@@ -51,8 +51,7 @@ class QrBotController extends Controller
                         // 画像メッセージで返信
                         $url = url('qr_code/'. $filename);
                         $replying_message = new TextMessageBuilder(
-                            $url,
-                            $url
+                            '$url'
                         );
                         $bot->replyMessage($reply_token, $replying_message);
 
