@@ -43,7 +43,7 @@ class QrBotController extends Controller
                         $qrCode = new QrCode($text);
                         $qrCode->writeFile($path);
                         // 画像メッセージで返信
-                        $url = url('qr_code/'. $filename);
+                        $url = url('qr_code/'. '868sfxxy.png');
                         $replying_message = new ImageMessageBuilder(
                             $url,
                             $url
