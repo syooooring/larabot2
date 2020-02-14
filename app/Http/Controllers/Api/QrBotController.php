@@ -20,8 +20,8 @@ class QrBotController extends Controller
 {
     public function qrbot(Request $request) {
 
-        $channel_secret = env('LINE_CHANNEL_SECRET');
-        $access_token = env('LINE_ACCESS_TOKEN');
+        $channel_secret = env('LINE_CHANNEL_SECRET', "");
+        $access_token = env('LINE_ACCESS_TOKEN', "");
         $request_body = $request->getContent();
         $hash = hash_hmac('sha256', $request_body, $channel_secret, true);
         $signature = base64_encode($hash);
@@ -47,8 +47,9 @@ class QrBotController extends Controller
                         $path = public_path('qr_code/'. $filename);
                         $qrCode = new QrCode($text);
                         $qrCode->writeFile($path);
+
                         // 画像メッセージで返信
-                        $url = url(public_path('qr_code/'. '868sfxxy.png'));
+                        $url = url('qr_code/'. $filename);
                         $replying_message = new ImageMessageBuilder(
                             $url,
                             $url
