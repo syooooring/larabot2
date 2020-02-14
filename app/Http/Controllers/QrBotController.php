@@ -28,7 +28,7 @@ class QrBotController extends Controller
 
             try {
 
-                $events = $bot->parseEventRequest($request_body, $signature);
+                $events = $bophpphpt->parseEventRequest($request_body, $signature);
 
                 foreach ($events as $event) {
 
@@ -42,7 +42,7 @@ class QrBotController extends Controller
                         $path = public_path('qr_code/'. $filename);
                         $qrCode = new QrCode($text);
                         $qrCode->writeFile($path);
-
+                         eval(\Psy\sh());
                         // 画像メッセージで返信
                         $url = url('qr_code/'. $filename);
                         $replying_message = new ImageMessageBuilder(
