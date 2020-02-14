@@ -35,12 +35,13 @@ class QrBotController extends Controller
 
         try {
             // イベント取得
-            $events = $lineBot->parseEventRequest($request->getContent('php://input'), $signature);
+            $events = $lineBot->parseEventRequest($request->getContent(), $signature);
 
             foreach ($events as $event) {
-                $response = $linebot->replyMessage(
-                    $event->getReplyToken(), new TextMessageBuilder($event->getText())  
-                );
+                // ハローと応答する
+                $replyToken = $event->getReplyToken();
+                $textMessage = new TextMessageBuilder("ハロー");
+                $lineBot->replyMessage($replyToken, $textMessage);
             }
         } catch (Exception $e) {
             // TODO 例外
