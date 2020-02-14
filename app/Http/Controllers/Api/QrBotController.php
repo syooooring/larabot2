@@ -39,7 +39,7 @@ class QrBotController extends Controller
 
             foreach ($events as $event) {
                 $response = $linebot->replyMessage(
-                    $event->getReplyToken(), new TextMessageBuilder($event->getText())  
+                    $event->getReplyToken(), new TextMessageBuilder($event->getContent())  
                 );
             }
         } catch (Exception $e) {
