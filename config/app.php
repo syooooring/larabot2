@@ -176,8 +176,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-        LINE\LINEBot\HTTPClient\CurlHTTPClient::class,
-        LINE\LINEBot::class,
+        // LINE\LINEBot\HTTPClient\CurlHTTPClient::class,
+        // LINE\LINEBot::class,
 
 
     ],
