@@ -19,5 +19,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::group(['namespace' => 'Api'], function() {
     // LineからのWebhookを受信
-    Route::post('/line/qr-bot', 'QrBotController@reply')->name('reply');
+    Route::post('/line/qrbot', 'QrBotController@qrbot')->name('qrbot');
 });
