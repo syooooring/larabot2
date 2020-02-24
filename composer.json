@@ -12,6 +12,7 @@
         "ext-intl": "*",
         "endroid/qr-code": "^3.7",
         "fideloper/proxy": "^4.0",
+        "guzzlehttp/guzzle": "^6.5",
         "laravel/framework": "^6.2",
         "laravel/tinker": "^2.0",
         "linecorp/line-bot-sdk": "^4.2"
