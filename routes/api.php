@@ -1,3 +1,3 @@
 <?php
 
-Route::post('/qiita', 'LineBotController@qiita');
+Route::post('/qiita', 'QrBotController@qiita');
