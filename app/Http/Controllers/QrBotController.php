@@ -1,53 +1,57 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
-use Endroid\QrCode\QrCode;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
+
 use LINE\LINEBot;
-use LINE\LINEBot\HTTPClient\CurlHTTPClient;
-use LINE\LINEBot\MessageBuilder\ImageMessageBuilder;
-use LINE\LINEBot\Event\MessageEvent;
 use LINE\LINEBot\Event\MessageEvent\TextMessage;
-use App\Http\Controllers\Controller;
-use LINE\LINEBot\Constant\HTTPHeader;
-use LINE\LINEBot\SignatureValidator;
-use LINE\LINEBot\MessageBuilder\TextMessageBuilder;
-use Exception;
+use LINE\LINEBot\HTTPClient\CurlHTTPClient;
+use LINE\LINEBot\MessageBuilder\FlexMessageBuilder;
+use LINE\LINEBot\MessageBuilder\Flex\ContainerBuilder\CarouselContainerBuilder;
+
+use App\Services\RestaurantBubbleBuilder;
+use App\Services\Qiita;
 
 class QrBotController extends Controller
 {
-    public function qrbot (Request $request)
+    public function index()
     {
-        $lineAccessToken = env('LINE_ACCESS_TOKEN', "");
-        $lineChannelSecret = env('LINE_CHANNEL_SECRET', "");
+        return view('linebot.index');
+    }
 
-        // 署名のチェック
-        $signature = $request->headers->get(HTTPHeader::LINE_SIGNATURE);
-        if (!SignatureValidator::validateSignature($request->getContent(), $lineChannelSecret, $signature)) {
-            // TODO 不正アクセス
-            return;
-        }
-
-        $httpClient = new CurlHTTPClient ($lineAccessToken);
-        $lineBot = new LINEBot($httpClient, ['channelSecret' => $lineChannelSecret]);
-
-        try {
-            // イベント取得
-            $events = $lineBot->parseEventRequest($request->getContent(), $signature);
-
-            foreach ($events as $event) {
-                // ハローと応答する
-                $replyToken = $event->getReplyToken();
-                $textMessage = new TextMessageBuilder("aaaaaaaa");
-                $lineBot->replyMessage($replyToken, $textMessage);
+    public function qiitax(Request $request)
+    {
+        // -- 略
+        foreach ($events as $event) {
+            if (!($event instanceof TextMessage)) {
+                Log::debug('Non text message has come');
+                continue;
             }
-        } catch (Exception $e) {
-            // TODO 例外
-            return;
-        }
+            
+            // -- ここから追加
+            $qiita = new Qiita();
+            $qiitaResponse = $gurunavi->searchQiita($event->getText());
 
-        return;
+            if (array_key_exists('error', $qiitaResponse)) {
+                $replyText = $qiitaResponse['error'][0]['message'];
+                $replyToken = $event->getReplyToken();
+                $lineBot->replyText($replyToken, $replyText);
+                continue;
+            }
+
+            $replyText = '';
+            foreach($qiitaResponse['rest'] as $respon) {
+                $replyText .=
+                    $respon['title'] . "\n" .
+                    $respon['url'] . "\n" .
+                    $respon['updated_at'] . "\n" .
+                    "\n";
+            }
+            
+            $replyToken = $event->getReplyToken();
+            $lineBot->replyText($replyToken, $replyText);
+        }        
     }
 }
