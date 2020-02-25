@@ -1,4 +1,4 @@
 <?php
 
-Route::post('/qiita', 'QrBotController@qiita');
-Route::get('/qiita', 'QrBotController@qiita');
+Route::post('/qiitax', 'QrBotController@qiitax');
+Route::get('/qiitax', 'QrBotController@qiitax');
