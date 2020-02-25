@@ -11,7 +11,6 @@ use LINE\LINEBot\HTTPClient\CurlHTTPClient;
 use LINE\LINEBot\MessageBuilder\FlexMessageBuilder;
 use LINE\LINEBot\MessageBuilder\Flex\ContainerBuilder\CarouselContainerBuilder;
 
-use App\Services\RestaurantBubbleBuilder;
 use App\Services\Qiita;
 
 class QrBotController extends Controller
@@ -23,7 +22,22 @@ class QrBotController extends Controller
 
     public function qiitax(Request $request)
     {
-        // -- 略
+        Log::debug($request->header());
+        Log::debug($request->input());
+
+        $httpClient = new CurlHTTPClient(env('LINE_ACCESS_TOKEN'));
+        $lineBot = new LINEBot($httpClient, ['channelSecret' => env('LINE_CHANNEL_SECRET')]);
+
+        $signature = $request->header('x-line-signature');
+
+        if (!$lineBot->validateSignature($request->getContent(), $signature)) {
+            abort(400, 'Invalid signature');
+        }
+
+        $events = $lineBot->parseEventRequest($request->getContent(), $signature);
+
+        Log::debug($events);
+        
         foreach ($events as $event) {
             if (!($event instanceof TextMessage)) {
                 Log::debug('Non text message has come');
