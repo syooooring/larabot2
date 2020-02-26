@@ -11,7 +11,7 @@ use LINE\LINEBot\HTTPClient\CurlHTTPClient;
 use LINE\LINEBot\MessageBuilder\FlexMessageBuilder;
 use LINE\LINEBot\MessageBuilder\Flex\ContainerBuilder\CarouselContainerBuilder;
 
-use App\Services\Qiita;
+use App\Services\Connpass;
 
 class QrBotController extends Controller
 {
@@ -20,7 +20,7 @@ class QrBotController extends Controller
         return view('linebot.index');
     }
 
-    public function qiitax(Request $request)
+    public function cpserch(Request $request)
     {
         Log::debug($request->header());
         Log::debug($request->input());
@@ -37,7 +37,7 @@ class QrBotController extends Controller
         $events = $lineBot->parseEventRequest($request->getContent(), $signature);
 
         Log::debug($events);
-        
+
         foreach ($events as $event) {
             if (!($event instanceof TextMessage)) {
                 Log::debug('Non text message has come');
@@ -45,18 +45,18 @@ class QrBotController extends Controller
             }
             
             // -- ここから追加
-            $qiita = new Qiita();
-            $qiitaResponse = $gurunavi->searchQiita($event->getText());
+            $connpass = new Connpass();
+            $connpassResponse = $connpass->searchCpevents($event->getText());
 
-            if (array_key_exists('error', $qiitaResponse)) {
-                $replyText = $qiitaResponse['error'][0]['message'];
+            if (array_key_exists('error', $connpassResponse)) {
+                $replyText = $connpassResponse['error'][0]['message'];
                 $replyToken = $event->getReplyToken();
                 $lineBot->replyText($replyToken, $replyText);
                 continue;
             }
 
             $replyText = '';
-            foreach($qiitaResponse['rest'] as $respon) {
+            foreach($connpassResponse['rest'] as $respon) {
                 $replyText .=
                     $respon['title'] . "\n" .
                     $respon['url'] . "\n" .
