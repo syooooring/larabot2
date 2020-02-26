@@ -10,7 +10,7 @@ class Connpass
 {    
   private const CONNPASS_SEARCH_API_URL = 'https://connpass.com/api/v1/event/';
 
-    public function searchConnpass(string $word): array
+    public function searchCpevents(string $word): array
     {
         $client = new Client();
         $response = $client
