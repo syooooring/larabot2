@@ -1,3 +1,3 @@
 <?php
 
-Route::post('/cpserch', 'QrBotController@cpserch');
+Route::post('/cpserch', 'BotController@cpserch');

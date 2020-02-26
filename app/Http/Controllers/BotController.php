@@ -13,7 +13,7 @@ use LINE\LINEBot\MessageBuilder\Flex\ContainerBuilder\CarouselContainerBuilder;
 
 use App\Services\Connpass;
 
-class QrBotController extends Controller
+class BotController extends Controller
 {
     public function index()
     {
