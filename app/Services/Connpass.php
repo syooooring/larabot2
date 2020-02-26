@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use GuzzleHttp\Client;
-use LINE\LINEBot\MessageBuilder\Flex\ContainerBuilder;
 
 
 class Connpass
