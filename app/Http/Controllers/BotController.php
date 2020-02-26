@@ -46,7 +46,7 @@ class BotController extends Controller
             
             
             $connpass = new Connpass();
-            $connpassResponse = $connpass->searchCpserch($event->getText());
+            $connpassResponse = $connpass->searchCpevents($event->getText());
 
             if (array_key_exists('error', $connpassResponse)) {
                 $replyText = $connpassResponse['error'][0]['message'];
