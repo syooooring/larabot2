@@ -16,8 +16,8 @@ class Connpass
         $response = $client
             ->get(self::CONNPASS_SEARCH_API_URL, [
                 'query' => [
-                    'event_id' => $event_id,
-                    'freeword' => str_replace(' ', ',', $word),
+                    // 'event_id' => $event_id,
+                    'keyword' => str_replace(' ', ',', $word),
                 ],
               'http_errors' => false,
             ]);
