@@ -6,17 +6,17 @@ use GuzzleHttp\Client;
 use LINE\LINEBot\MessageBuilder\Flex\ContainerBuilder;
 
 
-class Qiita
+class Connpass
 {    
-  private const QIITA_SEARCH_API_URL = 'https://qiita.com/api/v2/items';
+  private const CONNPASS_SEARCH_API_URL = 'https://connpass.com/api/v1/event/';
 
     public function searchQiita(string $word): array
     {
         $client = new Client();
         $response = $client
-            ->get(self::QIITA_SEARCH_API_URL, [
+            ->get(self::CONNPASS_SEARCH_API_URL, [
                 'query' => [
-                    'keyid' => env('QIITA_ACCESS_TOKEN'),
+                    'event_id' => $event_id,
                     'freeword' => str_replace(' ', ',', $word),
                 ],
               'http_errors' => false,
