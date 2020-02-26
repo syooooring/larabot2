@@ -44,9 +44,9 @@ class BotController extends Controller
                 continue;
             }
             
-            // -- ここから追加
+            
             $connpass = new Connpass();
-            $connpassResponse = $connpass->searchCpevents($event->getText());
+            $connpassResponse = $connpass->searchCpserch($event->getText());
 
             if (array_key_exists('error', $connpassResponse)) {
                 $replyText = $connpassResponse['error'][0]['message'];
@@ -65,7 +65,8 @@ class BotController extends Controller
             }
             
             $replyToken = $event->getReplyToken();
-            $lineBot->replyText($replyToken, $replyText);
+            //$lineBot->replyText($replyToken, $replyText);
+            $lineBot->replyMessage($event->getReplyToken());
         }        
     }
 }
