@@ -7,7 +7,7 @@ use GuzzleHttp\Client;
 
 class Connpass
 {    
-  private const CONNPASS_SEARCH_API_URL = 'https://connpass.com/api/v1/event/';
+  private const CONNPASS_SEARCH_API_URL = 'https://connpass.com/api/v1/event/?keyword=';
 
     public function searchCpevents(string $word)
     {
