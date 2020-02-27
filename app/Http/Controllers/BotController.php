@@ -58,8 +58,7 @@ class BotController extends Controller
             $replyText = '';
             foreach($connpassResponse['rest'] as $respon) {
                 $replyText .=
-                    $respon['title'] . "\n" .
-                    $respon['url'] . "\n" .
+                    $respon['event_url'] . "\n" .
                     $respon['updated_at'] . "\n" .
                     "\n";
             }
